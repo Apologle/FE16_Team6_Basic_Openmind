@@ -1,0 +1,14 @@
+h1 {
+  text-align: center;
+}
+
+.search-Container {
+  display: flex;
+  flex-direction: center;
+  justify-content: center;
+}
+
+/*
+.search-Button {
+}
+*/
