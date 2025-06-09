@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 import { ButtonBrown40 } from '../../../components/Button.jsx';
 
-function AnswerForm() {
+function AnswerForm(editMode, onEditChange, rejected, children, subjectInfo) {
   const [completeState, SetCompleteState] = useState(children);
   const [answerText, setAnswerText] = useState('');
   const [text, setText] = useState('');
