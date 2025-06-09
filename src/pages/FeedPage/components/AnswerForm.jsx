@@ -12,30 +12,87 @@ function AnswerForm(editMode, onEditChange, rejected, children, subjectInfo) {
   const [answerText, setAnswerText] = useState('');
   const [text, setText] = useState('');
 
+  useEffect(() => {
+    if (editMode) {
+      const handleAnswerEdit = async () => {
+        try {
+          const response = await axios.get(
+            `https://openmind-api.vercel.app/16-6/answers/${children.id}/`,
+          );
+          setText(response.data.content);
+          setAnswerText(response.data.content);
+          textArray = response.data.content;
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      handleAnswerEdit();
+    }
+  }, [editMode]);
+
+  const buttonEnabled = answerText.trim().length > 0;
+
   const handleAnswerChange = (e) => {
     setAnswerText(e.target.value); //입력값을 answerText 에 담는다.
     console.log(e.target.value); // 입력 확인
   };
 
+  //작성 버튼 누르면 아래 실행.
+  const handleSubmitAnswer = async () => {
+    if (answerText.trim().length > 0) {
+      const requestBody = {
+        content: answerText,
+        isRejected: false,
+      };
+      if (completeState == null) {
+        try {
+          const response = await axios.post(
+            `https://openmind-api.vercel.app/16-6/questions/${questionID}/answers/`,
+            requestBody,
+          );
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        try {
+          const response = await axios.put(
+            `https://openmind-api.vercel.app/16-6/answers/${children.id}/`,
+            requestBody,
+          );
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      setAnswerText(''); // 제출 후 입력 필드 초기화
+    }
+  };
+
   return (
-    <>
-      <AnswerInput>
-        <AnswerBoxUpperlineWrapper>
-          <AnswerBoxSubjectname>{subjectInfo.name}</AnswerBoxSubjectname>
-        </AnswerBoxUpperlineWrapper>
-        <SubstantialInput
-          onChange={handleAnswerChange}
-          value={answerText}
-          placeholder='답변을 입력해 주세요'
-        ></SubstantialInput>
-        <AnswerCompleteButton
-          onClick={handleSubmitAnswer}
-          disabled={!buttonEnabled}
-        >
-          답변 완료
-        </AnswerCompleteButton>
-      </AnswerInput>
-    </>
+    <AnswerBoxWrapper>
+      <AnswerBoxSubjectImage
+        src={subjectInfo.imageSource}
+        alt='답변자 프로필 사진'
+      />
+      <div>
+        <AnswerInput>
+          <AnswerBoxUpperlineWrapper>
+            <AnswerBoxSubjectname>{subjectInfo.name}</AnswerBoxSubjectname>
+          </AnswerBoxUpperlineWrapper>
+          <SubstantialInput
+            onChange={handleAnswerChange}
+            value={answerText}
+            placeholder='답변을 입력해 주세요'
+          ></SubstantialInput>
+          <AnswerCompleteButton
+            onClick={handleSubmitAnswer}
+            disabled={!buttonEnabled}
+          >
+            답변 완료
+          </AnswerCompleteButton>
+        </AnswerInput>
+      </div>
+    </AnswerBoxWrapper>
   );
 }
 
@@ -83,4 +140,16 @@ const SubstantialInput = styled.textarea`
 const AnswerCompleteButton = styled(ButtonBrown40)`
   justify-content: center;
   font-size: 16px;
+`;
+
+const AnswerBoxWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const AnswerBoxSubjectImage = styled.img`
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 9999px;
 `;
