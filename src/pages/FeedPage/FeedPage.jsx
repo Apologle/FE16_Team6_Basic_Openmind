@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import FloatingButton from './components/FloatingButton';
 import PostHeader from './components/PostHeader';
+import AnswerForm from './components/AnswerForm';
 
 function FeedPage() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -54,6 +55,7 @@ function FeedPage() {
         questions={questions}
         callback={additionalFetch}
       />
+      <AnswerForm />
       <FloatingButton />
     </>
   );
