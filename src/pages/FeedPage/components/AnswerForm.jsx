@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 import { ButtonBrown40 } from '../../../components/Button.jsx';
 
 function AnswerForm(editMode, onEditChange, rejected, children, subjectInfo) {
+  //editMode = 상위 컴포넌트에서 내려받는 editMode 여부 (true/false) 수정모드로 진입할지 여부를 결정.
+  //onEditChange = 상위 컴포넌트에서 제어 할 목적으로 만든 set
+
   const [completeState, SetCompleteState] = useState(children);
   const [answerText, setAnswerText] = useState('');
   const [text, setText] = useState('');
